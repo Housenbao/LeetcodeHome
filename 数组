@@ -1,0 +1,116 @@
+
+[TOC]
+## 03有序数组
+题目链接：<https://leetcode.cn/problems/squares-of-a-sorted-array/>
+
+![image.png](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7d5078dadf84401f939b329c1782ade1~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.image#?w=1069&h=439&s=50878&e=png&b=ffffff)
+
+### 思路：
+观察到数组的递增特点，平方之后是两边往中间递减，利用双指针法，从两头往中间依次取数即可
+
+```java
+class Solution {
+
+public int[] sortedSquares(int[] nums) {
+        int i = 0, j = nums.length-1,k = nums.length-1;
+        int result[] = new int[nums.length];
+        while(i<=j){//等号对应最小一个元素，如果去掉则不处理最后一个元素
+
+            if(nums[i]*nums[i]<nums[j]*nums[j]){
+                result[k--] = nums[j]*nums[j];
+                --j;
+            }
+            else{
+                result[k--] = nums[i]*nums[i];
+                ++i;
+            }
+        }
+        return result;
+    }
+}
+```
+# 04滑动窗口
+> Problem: [209. 长度最小的子数组](https://leetcode.cn/problems/minimum-size-subarray-sum/description/)
+
+
+
+### 思路
+
+> 想到了要用双指针法，但是双指针的细节没有把握好，指针如何运动没有很好掌握
+
+### 解题方法
+
+> 两个指针i与j，右指针不断右边移动，同时每移动一次，都计算一次最合适的窗口大小。并用result记录该结果。
+> 最后判断result是否为max_value，如果是那么窗口并不能满足target的目标
+
+### 复杂度
+
+时间复杂度:
+> 指针都是单向移动，时间复杂度为$O(n)$
+
+空间复杂度:
+> 添加空间复杂度, 示例： $O(1)$
+
+
+
+### Code
+```Java []
+class Solution {
+    public int minSubArrayLen(int target, int[] nums) {
+        int  result = nums.length+1;
+        int sum = 0;
+        for(int i =0,j = 0;j<nums.length;j++){
+            sum+=nums[j];
+            while(sum>=target){
+                result = (result<(j-i+1)) ?result:(j-i+1);
+                sum-=nums[i++];
+            }
+
+        }
+        return (result<(nums.length+1))?result:0;
+    }
+}
+```
+
+# 05 螺旋数组
+
+```
+class Solution {
+    public int[][] generateMatrix(int n) {
+        int loop = 0;  // 控制循环次数
+        int[][] res = new int[n][n];
+        int start = 0;  // 每次循环的开始点(start, start)
+        int count = 1;  // 定义填充数字
+        int i, j;
+
+        while (loop++ < n / 2) { // 判断边界后，loop从1开始
+            // 模拟上侧从左到右
+            for (j = start; j < n - loop; j++) {
+                res[start][j] = count++;
+            }
+
+            // 模拟右侧从上到下
+            for (i = start; i < n - loop; i++) {
+                res[i][j] = count++;
+            }
+
+            // 模拟下侧从右到左
+            for (; j >= loop; j--) {
+                res[i][j] = count++;
+            }
+
+            // 模拟左侧从下到上
+            for (; i >= loop; i--) {
+                res[i][j] = count++;
+            }
+            start++;
+        }
+
+        if (n % 2 == 1) {
+            res[start][start] = count;
+        }
+
+        return res;
+    }
+}
+```
